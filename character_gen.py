@@ -2,7 +2,6 @@
 import random
 
 
-
 class Character(object):
     """Our Character object."""
 
@@ -16,7 +15,7 @@ class Character(object):
         self.charisma = 0
         self.dexterity = 0
         self.luck = 0
-        self.equipment = dict()
+        self.equipment = {'weapon': None, 'armor': None, 'misc': 0}
         self.gold = random.randint(50, 150)
         self.char = None
 
@@ -109,7 +108,7 @@ class Character(object):
         elif user_choice == '4':
             return 'Cleric'
         else:
-            raise ValueError("YOU DIDN'T FOLLOW THE RULES!!!!")
+            raise ValueError("The gods are a fickle bunch who have decided to strike you down before you even got started. Better luck next time.")
 
     def get_equipment(self):
         shopkeep_intro = """
@@ -119,6 +118,18 @@ class Character(object):
         2. Armor
         3. Misc
         """
+
+        print(shopkeep_intro)
+        print('Gold: {}'.format(self.gold))
+        choice = input(">>> ")
+        if choice == '1':
+            self.buy_weapons()
+        elif choice == '2':
+            self.buy_armor()
+        elif choice == '3':
+            self.buy_misc()
+
+    def buy_weapons(self):
         shopkeep_weapon = """
         "An excellent choice! Can't go off into the world without a way to defend yourself.
         What kind of weapon are you looking for?"
@@ -128,6 +139,44 @@ class Character(object):
         3. Dagger - 10G
         4. Mace - 50G
         """
+        print(shopkeep_weapon)
+        weapon_choice = input(">>> ")
+        if weapon_choice == '1':
+            if self.gold < 50:
+                print("Sorry, you don't have enough gold for that.")
+                self.buy_weapons()
+            print('There you are!')
+            self.char.equipment['weapon'] = 'Sword'
+            self.gold = self.gold - 50
+            self.print_character_info_again(self.char)
+        elif weapon_choice == '2':
+            if self.gold < 20:
+                print("Sorry, you don't have enough gold for that.")
+                self.buy_weapons()
+            print('There you are!')
+            self.char.equipment['weapon'] = 'Stave'
+            self.gold = self.gold - 20
+            self.print_character_info_again(self.char)
+        elif weapon_choice == '3':
+            if self.gold < 10:
+                print("Sorry, you don't have enough gold for that.")
+                self.buy_weapons()
+            print('There you are!')
+            self.char.equipment['weapon'] = 'Dagger'
+            self.gold = self.gold - 10
+            self.print_character_info_again(self.char)
+        elif weapon_choice == '4':
+            if self.gold < 50:
+                print("Sorry, you don't have enough gold for that.")
+                self.buy_weapons()
+            print('There you are!')
+            self.char.equipment['weapon'] = 'Mace'
+            self.gold = self.gold - 50
+            self.print_character_info_again(self.char)
+        else:
+            raise ValueError("The shopkeep doesn't appreciate your tone and decides to cut your adventure short. Better luck next time.")
+
+    def buy_armor(self):
         shopkeep_armor = """
         "A wise choice. Going on an adventure without protection would be a poor idea.
         What kind of armor are you looking for?"
@@ -136,21 +185,52 @@ class Character(object):
         2. Medium - 35G
         3. Light - 20G
         """
+        print(shopkeep_armor)
+        armor_choice = input(">>> ")
+        if armor_choice == '1':
+            if self.gold < 50:
+                print("Sorry, you don't have enough gold for that.")
+                self.buy_weapons()
+            print('There you are!')
+            self.char.equipment['armor'] = 'Heavy'
+            self.gold = self.gold - 50
+            self.print_character_info_again(self.char)
+        elif armor_choice == '2':
+            if self.gold < 35:
+                print("Sorry, you don't have enough gold for that.")
+                self.buy_weapons()
+            print('There you are!')
+            self.char.equipment['armor'] = 'Medium'
+            self.gold = self.gold - 35
+            self.print_character_info_again(self.char)
+        elif armor_choice == '3':
+            if self.gold < 20:
+                print("Sorry, you don't have enough gold for that.")
+                self.buy_weapons()
+            print('There you are!')
+            self.char.equipment['armor'] = 'Light'
+            self.gold = self.gold - 20
+            self.print_character_info_again(self.char)
+        else:
+            raise ValueError("The shopkeep doesn't appreciate your tone and decides to cut your adventure short. Better luck next time.")
+
+    def buy_misc(self):
         shopkeep_misc = """
-        "Oh...I was hoping you wouldn't choose this. Ummm...well I guess I have some of this water I could sell you.
-        What do you say? 1G for a flask of water?
+        "Oh...I was hoping you wouldn't choose this. Ummm...well I guess I have some of this wa....
+        POTIONS! I have potions for sale! 10G each. How many would you like?"
         """
-        print(shopkeep_intro)
-        print('Gold: {}'.format(self.gold))
-        choice = input(">>> ")
-        if choice == '1':
-            print(shopkeep_weapon)
-            weapon_choice = input(">>> ")
-            if weapon_choice == '1':
-                print('There you are!')
-                self.char.equipment['weapon'] = 'Sword'
-                self.gold = self.gold - 50
-                self.print_character_info_again(self.char)
+        print(shopkeep_misc)
+        number_of_potions = input(">>> ")
+        if number_of_potions == '0':
+            print("Probably a good choice, it was just water anyways.")
+        elif self.gold < int(number_of_potions) * 10:
+            print("Sorry, you don't have enough gold for that many.")
+            self.buy_misc()
+        print("Excellent....Excellent! You won't regret this decision. Not. At. All.")
+        self.char.equipment['misc'] += int(number_of_potions)
+        self.gold = self.gold - int(number_of_potions) * 10
+        self.print_character_info_again(self.char)
+
 
     def print_character_info(self, char):
         info = """
@@ -164,7 +244,22 @@ class Character(object):
         Charisma: {}
         Dexterity: {}
         Luck: {}
-        """.format(char.name, char.level, char.health, char.defense, char.strength, char.intelligence, char.charisma, char.dexterity, char.luck)
+        Equipment:
+            Weapon: {}
+            Armor: {}
+            Potions: {}
+        """.format(char.name,
+                   char.level,
+                   char.health,
+                   char.defense,
+                   char.strength,
+                   char.intelligence,
+                   char.charisma,
+                   char.dexterity,
+                   char.luck,
+                   char.equipment['weapon'],
+                   char.equipment['armor'],
+                   char.equipment['misc'])
         print(info)
         choice = input('If you want to re-choose press 1 otherwise press 2 to continue: ')
         if choice == '1':
@@ -186,7 +281,20 @@ class Character(object):
         Luck: {}
         Equipment:
             Weapon: {}
-        """.format(char.name, char.level, char.health, char.defense, char.strength, char.intelligence, char.charisma, char.dexterity, char.luck, char.equipment['weapon'])
+            Armor: {}
+            Potions: {}
+        """.format(char.name,
+                   char.level,
+                   char.health,
+                   char.defense,
+                   char.strength,
+                   char.intelligence,
+                   char.charisma,
+                   char.dexterity,
+                   char.luck,
+                   char.equipment['weapon'],
+                   char.equipment['armor'],
+                   char.equipment['misc'])
         print(info)
         moar = input('Would you like to buy more equipment? You have {} gold left. y/n: '.format(self.gold))
         if moar == 'y':
