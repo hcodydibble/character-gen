@@ -4,6 +4,8 @@ A quick character generator that will let you create a Fighter, Mage, Thief or C
 
 ## Using it
 
-In order to use the character generator you will need to clone down the repo `$ git clone https://github.com/hcodydibble/character-gen.git` then `$ cd character-gen` then you will just need to type `$ python character_gen.py`
+In order to use the character generator you will need to clone down the repo 
+`$ git clone https://github.com/hcodydibble/character-gen.git` then `$ cd character-gen` 
+then you will just need to type `$ python character_gen.py`
 
 I hope you have some fun making random characters!
