@@ -1,11 +1,26 @@
-"""A generic RPG character generator."""
+"""A generic RPG character generator.
+
+It chains together a few method calls to let the user
+create an adventurer, re-create if they are unhappy with their randomized stats or
+to continue on to buying equipment if they are happy. After they get everything set up 
+they can then send their adventurer off on their grand adventure.
+"""
 import random
 
 
 class Character(object):
-    """Our Character object."""
+    """Our Character object.
+
+    This Character object ended up also holding the start of the adventure.
+    """
 
     def __init__(self, name=None):
+        """The init value of the Character.
+
+        All stats start at 0 and the character starts with no equipment and a random amount of gold.
+        The stats will be randomized once the make_character method is called and a new character is created
+        and then the user will be given the option to buy equipment.
+        """
         self.name = name
         self.level = 1
         self.health = 0
@@ -20,6 +35,10 @@ class Character(object):
         self.char = None
 
     def main(self):
+        """Method to kick off the whole thing.
+
+        It will get called in the if name == main block.
+        """
         try:
             self.print_intro()
         except KeyboardInterrupt:
@@ -27,6 +46,10 @@ class Character(object):
             print('Exiting!')
 
     def make_character(self, user_choice, char_name):
+        """Method that will create the character and give it stats.
+
+        Stats are randomized based off the users choice of class.
+        """
         if user_choice == 'Fighter':
             character = Character(char_name)
             character.health = random.randint(10, 30)
@@ -68,6 +91,7 @@ class Character(object):
 
 
     def print_intro(self):
+        """Method to print a nice little intro string and send the user off to character creation."""
         intro = """
         +-----------------------------------+
         |                                   |
@@ -90,6 +114,7 @@ class Character(object):
         self.make_character(self.class_choice(), self.character_name())
 
     def character_name(self):
+        """Method that let's the user select their characters name and makes sure they like their choice."""
         char_name = input('Name your character: ')
         really_sure = input("Are you sure about {}? y/n: ".format(char_name))
         if really_sure.lower() == 'y':
@@ -98,6 +123,7 @@ class Character(object):
             self.character_name()
 
     def class_choice(self):
+        """Method to gather user input for class choice."""
         user_choice = input('>>> ')
         if user_choice == '1':
             return 'Fighter'
@@ -111,6 +137,7 @@ class Character(object):
             raise ValueError("The gods are a fickle bunch who have decided to strike you down before you even got started. Better luck next time.")
 
     def get_equipment(self):
+        """Method that will start off the equipment buying."""
         shopkeep_intro = """
         "Welcome to the shop! What would you like to shop for today?"
 
@@ -130,6 +157,12 @@ class Character(object):
             self.buy_misc()
 
     def buy_weapons(self):
+        """Method that gets run if the user chooses to buy a weapon.
+
+        It gives them the option of buying either a Sword, Stave, Dagger or Mace
+        and will update the character object with their choice and subtract the
+        correct amount of gold.
+        """
         shopkeep_weapon = """
         "An excellent choice! Can't go off into the world without a way to defend yourself.
         What kind of weapon are you looking for?"
@@ -177,6 +210,12 @@ class Character(object):
             raise ValueError("The shopkeep doesn't appreciate your tone and decides to cut your adventure short. Better luck next time.")
 
     def buy_armor(self):
+        """Method that gets run if the user chooses to buy armor.
+
+        It gives them the option of buying either Heavy, Medium or Light armor
+        and will update the character object with their choice and subtract the
+        correct amount of gold.
+        """
         shopkeep_armor = """
         "A wise choice. Going on an adventure without protection would be a poor idea.
         What kind of armor are you looking for?"
@@ -215,6 +254,11 @@ class Character(object):
             raise ValueError("The shopkeep doesn't appreciate your tone and decides to cut your adventure short. Better luck next time.")
 
     def buy_misc(self):
+        """Method that gets run if the user chooses the Misc option.
+
+        It will give them the option of the number of 'potions' they would like to buy
+        and then change the character objects equipment accordingly.
+        """
         shopkeep_misc = """
         "Oh...I was hoping you wouldn't choose this. Ummm...well I guess I have some of this wa....
         POTIONS! I have potions for sale! 10G each. How many would you like?"
@@ -233,6 +277,12 @@ class Character(object):
 
 
     def print_character_info(self, char):
+        """Method that prints out the characters info after it is first created.
+
+        It shows them their name, stats, level and equipment and gives them the 
+        option to either re-create their character if they don't like something
+        or to continue on.
+        """
         info = """
         Here is your character:
         Name: {}
@@ -268,6 +318,11 @@ class Character(object):
             self.get_equipment()
 
     def print_character_info_again(self, char):
+        """Method that prints out the character every other time.
+
+        It will be updated with their equipment changes and give them the option to continue 
+        shopping or to depart on their quest.
+        """
         info = """
         Here is your character:
         Name: {}
